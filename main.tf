@@ -17,7 +17,6 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-# Criação de um RDS PostgreSQL
 resource "aws_db_instance" "postgres" {
   allocated_storage    = 10 
   storage_type         = "gp2"
