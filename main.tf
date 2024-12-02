@@ -6,7 +6,7 @@ resource "aws_security_group" "rds_sg" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] 
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -18,17 +18,17 @@ resource "aws_security_group" "rds_sg" {
 }
 
 resource "aws_db_instance" "postgres" {
-  allocated_storage    = 10 
+  allocated_storage    = 10
   storage_type         = "gp2"
   engine               = "postgres"
-  engine_version       = "15.4" 
-  instance_class       = "db.t3.micro" 
-  db_name                 = "avalanches_producao_db" 
-  username             = "dbadminuser" 
-  password             = "securepassword" 
+  engine_version       = "15.4"
+  instance_class       = "db.t3.micro"
+  db_name              = "avalanches_producao_db"
+  username             = "dbadminuser"
+  password             = "securepassword"
   parameter_group_name = "default.postgres15"
   skip_final_snapshot  = true
-  publicly_accessible  = true 
+  publicly_accessible  = true
 
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
 }
