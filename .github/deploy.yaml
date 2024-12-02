@@ -11,6 +11,9 @@ jobs:
     environment: production
     runs-on: ubuntu-latest
 
+    env:
+      DESTROY: 'false' # Altere para 'true' para realizar o destroy
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -27,20 +30,30 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
+      - name: Terraform Plan (Apply Mode)
+        if: ${{ env.DESTROY == 'false' }}
         run: terraform plan -out=tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Save Plan
+        if: ${{ env.DESTROY == 'false' }}
         uses: actions/upload-artifact@v3
         with:
           name: tfplan
           path: tfplan
 
       - name: Terraform Apply
+        if: ${{ env.DESTROY == 'false' }}
         run: terraform apply -auto-approve tfplan
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Terraform Destroy
+        if: ${{ env.DESTROY == 'true' }}
+        run: terraform destroy -auto-approve
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
