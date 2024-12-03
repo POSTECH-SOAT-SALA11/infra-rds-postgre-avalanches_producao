@@ -1,5 +1,5 @@
-resource "aws_security_group" "rds_sg" {
-  name_prefix = "rds-sg-"
+resource "aws_security_group" "rds__prod_sg" {
+  name_prefix = "rds-prod-sg-"
   description = "Security group for RDS instance"
 
   ingress {
@@ -25,7 +25,7 @@ resource "aws_db_instance" "postgres" {
   instance_class       = "db.t3.micro"
   db_name              = "avalanches_producao_db"
   username             = "dbadminuser"
-  password             = "securepassword"
+  password             = random_password.rds_password.result
   parameter_group_name = "default.postgres15"
   skip_final_snapshot  = true
   publicly_accessible  = true
@@ -52,7 +52,7 @@ resource "random_password" "rds_password" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name                    = "producao-dbcredentials"
+  name                    = "producao-dbcredentials-postgresql"
   recovery_window_in_days = 0
 }
 
