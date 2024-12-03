@@ -52,7 +52,7 @@ resource "random_password" "rds_password" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name                           = "producao-dbcredentials"
+  name                           = "producao-dbcredentialsv2"
   recovery_window_in_days        = 0
   force_overwrite_replica_secret = true
 }
