@@ -1,4 +1,4 @@
-resource "aws_security_group" "rds__prod_sg" {
+resource "aws_security_group" "rds_prod_sg" {
   name_prefix = "rds-prod-sg-"
   description = "Security group for RDS instance"
 
@@ -30,7 +30,7 @@ resource "aws_db_instance" "postgres" {
   skip_final_snapshot  = true
   publicly_accessible  = true
 
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  vpc_security_group_ids = [aws_security_group.rds_prod_sg.id]
 }
 
 output "rds_endpoint" {
@@ -52,7 +52,7 @@ resource "random_password" "rds_password" {
 }
 
 resource "aws_secretsmanager_secret" "db_credentials" {
-  name                    = "producao-dbcredentials-postgresql"
+  name                    = "producao-dbcredentials"
   recovery_window_in_days = 0
 }
 
