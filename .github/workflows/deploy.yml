@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DESTROY: 'true' #  Altere para  'true' para realizar o destroy// // false o deploy será realizado
+      DESTROY: 'false' #  Altere para  'true' para realizar o destroy// // false o deploy será realizado
 
     steps:
       - name: Checkout code
