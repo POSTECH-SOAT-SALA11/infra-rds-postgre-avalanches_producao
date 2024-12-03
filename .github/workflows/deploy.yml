@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DESTROY: 'false' # Altere para  'true' para realizar o destroy
+      DESTROY: 'false' #  Altere para  'true' para realizar o destroy
 
     steps:
       - name: Checkout code
