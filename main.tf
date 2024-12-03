@@ -44,3 +44,25 @@ output "rds_username" {
 output "rds_database_name" {
   value = aws_db_instance.postgres.db_name
 }
+
+resource "random_password" "rds_password" {
+  length           = 16
+  special          = true
+  override_special = "!@#%^&*()"
+}
+
+resource "aws_secretsmanager_secret" "db_credentials" {
+  name                    = "producao-dbcredentials"
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "db_credentials_version" {
+  secret_id = aws_secretsmanager_secret.db_credentials.id
+  secret_string = jsonencode({
+    db_host     = aws_db_instance.postgres.endpoint
+    db_port     = 5432
+    db_name     = aws_db_instance.postgres.db_name
+    db_user     = aws_db_instance.postgres.username
+    db_password = random_password.rds_password.result
+  })
+}
