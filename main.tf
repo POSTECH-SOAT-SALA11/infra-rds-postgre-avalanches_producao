@@ -1,5 +1,5 @@
-resource "aws_security_group" "rds_prod_sg" {
-  name_prefix = "rds-prod-sg-"
+resource "aws_security_group" "rds_sg" {
+  name_prefix = "rds-sg-"
   description = "Security group for RDS instance"
 
   ingress {
@@ -30,7 +30,7 @@ resource "aws_db_instance" "postgres" {
   skip_final_snapshot  = true
   publicly_accessible  = true
 
-  vpc_security_group_ids = [aws_security_group.rds_prod_sg.id]
+  vpc_security_group_ids = [aws_security_group.rds_sg.id]
 }
 
 output "rds_endpoint" {
