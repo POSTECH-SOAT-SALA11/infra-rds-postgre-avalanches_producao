@@ -24,6 +24,7 @@ resource "aws_db_instance" "postgres" {
   engine_version       = "15.4"
   instance_class       = "db.t3.micro"
   db_name              = "avalanches_producao_db"
+  identifier           = "avalanches-producao-db"
   username             = "dbadminuser"
   password             = random_password.rds_password.result
   parameter_group_name = "default.postgres15"
@@ -51,19 +52,23 @@ resource "random_password" "rds_password" {
   override_special = "!@#%^&*()"
 }
 
-resource "aws_secretsmanager_secret" "db_credentials" {
-  name                           = "producao-dbcredentialsv2"
-  recovery_window_in_days        = 0
-  force_overwrite_replica_secret = true
+resource "random_id" "secret_version" {
+  byte_length = 4
+}
+
+data "aws_secretsmanager_secret" "db_credentials" {
+  name = "producao-dbcredentials"
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_version" {
   secret_id = aws_secretsmanager_secret.db_credentials.id
+
   secret_string = jsonencode({
     db_host     = aws_db_instance.postgres.endpoint
     db_port     = 5432
     db_name     = aws_db_instance.postgres.db_name
     db_user     = aws_db_instance.postgres.username
     db_password = random_password.rds_password.result
+    version_id  = random_id.secret_version.hex
   })
 }
