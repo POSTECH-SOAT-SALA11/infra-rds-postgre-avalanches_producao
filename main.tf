@@ -61,7 +61,7 @@ data "aws_secretsmanager_secret" "db_credentials" {
 }
 
 resource "aws_secretsmanager_secret_version" "db_credentials_version" {
-  secret_id = aws_secretsmanager_secret.db_credentials.id
+  secret_id = data.aws_secretsmanager_secret.db_credentials.id
 
   secret_string = jsonencode({
     db_host     = aws_db_instance.postgres.endpoint
